@@ -1,2 +1,2 @@
 # imageOptSwift
-iOS client library for constructing imageOpt URLs
+imageOpt client library, to construct parameterized imageOpt url from plain image url

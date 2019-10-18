@@ -13,4 +13,5 @@ Pod::Spec.new do |spec|
   spec.tvos.deployment_target = "9.0"
   spec.source       = { :git => "https://github.com/imgopt/imageOptClient.git", :tag => "#{spec.version}" }
   spec.source_files  = "imageOptClient/Sources/*.swift"
+  spec.swift_version = "5"
 end

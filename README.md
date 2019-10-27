@@ -166,8 +166,8 @@ B. Lets say you have a normal View Controller (not Collection/Table viewControll
 License
 --------
 
-    Copyright (c) 2019 imageOpt
+Copyright (c) 2019 imageOpt
 
-    Available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT)
+Available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
  [1]: https://imageopt.com

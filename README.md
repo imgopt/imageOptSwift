@@ -18,7 +18,7 @@ pod 'imageOptClient'
 func constructURL(imageURL:String, imageView:UIImageView,
                               crop:Bool, completionHandler: @escaping (_ imageOptUrl: URL?) -> Void)
 ```                           
-Function to construct an imageOpt URL with query parameters, given an imageSet URL created at [imageOpt][1] and an imageView. This function waits for imageView size to be finalized, then constructs parameterized imageOpt URL using the given imageSet URL, imageView Size & crop preference and then calls completionHandler with that URL.
+Function to construct an imageOpt URL with query parameters, given an imageSet URL created at [imageOpt Image CDN][1] and an imageView. This function waits for imageView size to be finalized, then constructs parameterized imageOpt URL using the given imageSet URL, imageView Size & crop preference and then calls completionHandler with that URL.
 
 USE THIS FUNCTION WHEN SIZE IS NOT KNOWN/FINALIZED AT THE TIME OF CALLING.
 

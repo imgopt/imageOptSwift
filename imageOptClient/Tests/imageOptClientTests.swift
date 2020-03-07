@@ -57,6 +57,35 @@ class imageOptClientTests: XCTestCase {
         XCTAssertEqual(imageOptURL?.absoluteString, nil)
     }
     
+    func testWithLocale() {
+        let imageSize = CGSize(width: 200,height: 200)
+        let locale = Locale(identifier: "fr")
+        let expectedURL = imageURL + String(format: "?w=%.0f&h=%.0f&l=fr", imageSize.width * scale, imageSize.height * scale)
+        let imageOptURL = imageOptClient.constructURL(imageURL: imageURL, imageSize: imageSize, crop: false, locale: locale)
+        XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+    }
+    
+    func testZeroSizeWithLocale() {
+        let imageSize = CGSize(width: 0,height: 0)
+        let locale = Locale(identifier: "fr")
+        let imageOptURL = imageOptClient.constructURL(imageURL: imageURL, imageSize: imageSize, crop: false, locale: locale)
+        XCTAssertEqual(imageOptURL?.absoluteString, nil)
+    }
+    
+    func testWithSystemLocale() {
+        let imageSize = CGSize(width: 200,height: 200)
+        let expectedURL = imageURL + String(format: "?w=%.0f&h=%.0f&c=true&l=en", imageSize.width * scale, imageSize.height * scale)
+        let imageOptURL = imageOptClient.constructURL(imageURL: imageURL, imageSize: imageSize, crop: true, useSystemLocale: true)
+        XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+    }
+    
+    func testWithSystemLocaleFalse() {
+        let imageSize = CGSize(width: 200,height: 200)
+        let expectedURL = imageURL + String(format: "?w=%.0f&h=%.0f&c=true", imageSize.width * scale, imageSize.height * scale)
+        let imageOptURL = imageOptClient.constructURL(imageURL: imageURL, imageSize: imageSize, crop: true, useSystemLocale: false)
+        XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+    }
+
     func testBadURL() {
         let imageSize = CGSize(width: 200,height: 150)
         let badURL = "$%$^%*%^*%^*%&*@34"
@@ -76,6 +105,31 @@ class imageOptClientTests: XCTestCase {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 200))
         imageOptClient.constructURL(imageURL: imageURL, imageView: imageView, crop: true, completionHandler: { imageOptURL in
             let expectedURL = self.imageURL + String(format: "?w=%.0f&h=%.0f&c=true", imageView.frame.width * self.scale, imageView.frame.height * self.scale)
+            XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+        })
+    }
+    
+    func testImageViewWithLocale() {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 200))
+        let locale = Locale(identifier: "it")
+        imageOptClient.constructURL(imageURL: imageURL, imageView: imageView, crop: true, locale: locale, completionHandler: { imageOptURL in
+            let expectedURL = self.imageURL + String(format: "?w=%.0f&h=%.0f&c=true&l=it", imageView.frame.width * self.scale, imageView.frame.height * self.scale)
+            XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+        })
+    }
+    
+    func testImageViewWithSystemLocale() {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 200))
+        imageOptClient.constructURL(imageURL: imageURL, imageView: imageView, crop: false, useSystemLocale:true, completionHandler: { imageOptURL in
+            let expectedURL = self.imageURL + String(format: "?w=%.0f&h=%.0f&l=en", imageView.frame.width * self.scale, imageView.frame.height * self.scale)
+            XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
+        })
+    }
+
+    func testImageViewWithSystemLocaleFalse() {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 200))
+        imageOptClient.constructURL(imageURL: imageURL, imageView: imageView, crop: false, useSystemLocale:false, completionHandler: { imageOptURL in
+            let expectedURL = self.imageURL + String(format: "?w=%.0f&h=%.0f", imageView.frame.width * self.scale, imageView.frame.height * self.scale)
             XCTAssertEqual(imageOptURL?.absoluteString, expectedURL)
         })
     }

@@ -242,6 +242,96 @@ override func viewDidLoad() {
 }
 ```
 
+## Usage - SwiftUI
+
+First add the import statements
+```
+import SwiftUI
+// In this example we will use SDWebImageSwiftUI library load images, you can use any other library of your choice
+import SDWebImageSwiftUI 
+import imageOptClient
+```
+
+A. Lets say you want to load an image inside a List Row which has image covering half the cell width and text cover the other half, to calcualte the width dynamically we will use GeometryReader.
+
+```
+struct ListRow: View {
+    // Assuming the presence of rowData with imageURL(imageSet URL from imageOpt CDN) and name fields
+    var rowData: RowData
+    var body: some View {
+        GeometryReader { geo in
+            HStack {
+                // Using SDWebImageSwiftUI which fetches image using URL, you can use any library of your choice
+                WebImage(url:
+                    //Construct a imageOpt URL, since this is a table view we will prefer to crop the image
+                    imageOptClient.constructURL(imageURL: rowData.imageURL, 
+                        imageSize: CGSize(width: geo.size.width/2, height: geo.size.height), crop: true))
+                    .resizable()
+                    .placeholder {
+                        Rectangle().foregroundColor(.gray)
+                    }
+                    .indicator(.activity)
+                    .scaledToFill()
+                    .frame(width: geo.size.width/2)
+                Text(rowData.name).frame(width:geo.size.width/2)
+            }
+        }
+    }
+}
+```
+
+B. Lets say you want to load an image inside a List Row which has a fixed size image and we want to load the image corresponding to system language.
+```
+struct ListRow: View {
+    // Assuming the presence of rowData with imageURL(imageSet URL from imageOpt CDN) and name fields
+    var rowData: RowData
+    var body: some View {
+        HStack {
+            WebImage(url:
+                imageOptClient.constructURL(imageURL: rowData.imageURL,
+                    imageSize: CGSize(width: 100, height: 100), crop: true, useSystemLocale: true))
+                .resizable()
+                .placeholder {
+                    Rectangle().foregroundColor(.gray)
+                }
+                .indicator(.activity)
+                .scaledToFill()
+                .frame(width: 100, height:100)
+            Text(rowData.name)
+            Spacer()
+        }
+    }
+}
+```
+
+C. Lets say you want to load an image inside a full screen and want to show the complete image without any cropping and want to load an image of specific language
+
+```
+struct ContentView: View {
+    // Use the URL of imageSet obtained from imageOpt.com, this can be directly used or fetched from backend server
+    let imageURL = "https://djy8xy980kp8s.cloudfront.net/2e0d6k-p25/q"
+    // Create an instance of Locale and intialize it to say french language
+    let locale = Locale(identifier: "fr")
+
+    var body: some View {
+      GeometryReader { geo in
+            WebImage(url:
+                /* Get the imageOpt url with query parameters, since we want to always show  
+                 * complete image we will prefer not to crop the image, hence set crop to false */
+                imageOptClient.constructURL(imageURL: self.imageURL, 
+                    imageSize: CGSize(width: geo.size.width, height: geo.size.height), 
+                    crop: false, locale: self.locale))
+                .resizable()
+                .placeholder {
+                    Rectangle().foregroundColor(.gray)
+                }
+                .indicator(.activity) // Activity Indicator
+                .scaledToFit()
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .center)
+        }
+    }
+}
+```
 
 ## Usage - ObjectiveC
 
